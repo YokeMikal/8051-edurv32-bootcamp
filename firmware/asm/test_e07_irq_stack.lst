@@ -1,0 +1,36 @@
+0000          ORG 0000h
+0000  02 00 30  (len=3)  LJMP main
+000B          ORG 000Bh
+000B  02 00 60  (len=3)  LJMP isr_t0
+0030          ORG 0030h
+              ; [label main @ 0030h]
+0030  75 20 00  (len=3)  MOV 20h, #00h       ; Clear bit-addressable flags (RAM20.0 = 0)
+0033  75 30 00  (len=3)  MOV 30h, #00h       ; Clear ISR hit counter
+0036  74 55     (len=2)  MOV A, #55h         ; Main context signature ACC = 55h
+0038  D3        (len=1)  SETB C              ; Main context signature PSW.7 (CY) = 1
+0039  75 89 02  (len=3)  MOV TMOD, #02h      ; Timer 0 Mode 2 auto-reload
+003C  75 8C FD  (len=3)  MOV TH0, #0FDh      ; Reload FDh -> 3 prescaler ticks (36 cycles) to IRQ
+003F  75 8A FD  (len=3)  MOV TL0, #0FDh      ; Start TL0 = FDh
+0042  75 A8 82  (len=3)  MOV IE, #82h        ; EA=1 (bit7), ET0=1 (bit1)
+0045  D2 8C     (len=2)  SETB TR0            ; Start Timer 0
+              ; [label wait_isr @ 0047h]
+0047  30 00 FD  (len=3)  JNB RAM20.0, wait_isr
+004A  F5 31     (len=2)  MOV 31h, A          ; Capture restored ACC (must equal 55h)
+004C  85 D0 32  (len=3)  MOV 32h, PSW        ; Capture restored PSW (bit7 CY must equal 1)
+004F  75 90 7F  (len=3)  MOV P1, #7Fh        ; Sentinel completion
+              ; [label done_e07 @ 0052h]
+0052  80 FE     (len=2)  SJMP done_e07
+0060          ORG 0060h
+              ; [label isr_t0 @ 0060h]
+0060  C0 E0     (len=2)  PUSH ACC            ; SP: 09h -> 0Ah, RAM[0Ah] = 55h
+0062  C0 D0     (len=2)  PUSH PSW            ; SP: 0Ah -> 0Bh (max_sp = 0Bh)
+0064  74 AA     (len=2)  MOV A, #0AAh        ; Deliberately clobber ACC inside ISR
+0066  24 01     (len=2)  ADD A, #01h         ; ACC = ABh, clears CY = 0!
+0068  05 30     (len=2)  INC 30h             ; RAM[30h] = 01h
+006A  75 80 A5  (len=3)  MOV P0, #0A5h       ; Marker P0 = A5h inside ISR
+006D  C2 8C     (len=2)  CLR TR0             ; Stop Timer 0
+006F  D2 00     (len=2)  SETB RAM20.0        ; Signal main loop ISR finished
+0071  D0 D0     (len=2)  POP PSW             ; Restore PSW (CY=1!), SP: 0Bh -> 0Ah
+0073  D0 E0     (len=2)  POP ACC             ; Restore ACC (55h!), SP: 0Ah -> 09h
+0075  32        (len=1)  RETI                ; Pop return PC & clear int_proc, SP: 09h -> 07h
+              END

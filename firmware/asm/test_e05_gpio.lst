@@ -1,0 +1,15 @@
+0000          ORG 0000h
+              ; [label start_e05 @ 0000h]
+0000  75 80 5A  (len=3)  MOV P0, #5Ah        ; p0_o: FFh -> 5Ah (byte direct write to SFR 80h)
+0003  D2 80     (len=2)  SETB P0.0           ; p0_o: 5Ah -> 5Bh (bit-addressable write, bit 80h)
+0005  C2 81     (len=2)  CLR P0.1            ; p0_o: 5Bh -> 59h (bit-addressable clear, bit 81h)
+0007  63 80 F0  (len=3)  XRL P0, #0F0h       ; p0_o: 59h XOR F0h = A9h (rmw=1 reads p0_out!)
+000A  75 B0 3C  (len=3)  MOV P3, #3Ch        ; p3_o: FFh -> 3Ch (byte direct write to SFR B0h)
+000D  E5 A0     (len=2)  MOV A, P2           ; rmw=0 reads external pin p2_i = A5h
+000F  F5 30     (len=2)  MOV 30h, A          ; RAM[30h] = A5h
+0011  E5 80     (len=2)  MOV A, P0           ; rmw=0 reads external pin p0_i = C3h (NOT latch A9h!)
+0013  F5 31     (len=2)  MOV 31h, A          ; RAM[31h] = C3h
+0015  75 90 7F  (len=3)  MOV P1, #7Fh        ; Sentinel completion
+              ; [label done_e05 @ 0018h]
+0018  80 FE     (len=2)  SJMP done_e05
+              END

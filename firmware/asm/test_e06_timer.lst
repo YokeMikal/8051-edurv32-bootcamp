@@ -1,0 +1,26 @@
+0000          ORG 0000h
+              ; [label start_e06 @ 0000h]
+0000  75 89 02  (len=3)  MOV TMOD, #02h      ; Timer 0 Mode 2 (8-bit auto-reload)
+0003  75 8C FC  (len=3)  MOV TH0, #0FCh      ; Auto-reload value = FCh (4 prescaled ticks per overflow)
+0006  75 8A FC  (len=3)  MOV TL0, #0FCh      ; Initial TL0 = FCh
+0009  7B 00     (len=2)  MOV R3, #00h        ; Overflow hit counter = 0
+000B  C2 8D     (len=2)  CLR TF0             ; Ensure TF0 (TCON.5, bit 8Dh) clear before start
+000D  D2 8C     (len=2)  SETB TR0            ; Start Timer 0 (TCON.4 = 1)
+              ; [label wait_ovf1 @ 000Fh]
+000F  30 8D FD  (len=3)  JNB TF0, wait_ovf1  ; Poll TF0 until Overflow #1
+0012  85 8A 30  (len=3)  MOV 30h, TL0        ; Capture auto-reloaded TL0 (FCh)
+0015  C2 8D     (len=2)  CLR TF0             ; Clear TF0
+0017  0B        (len=1)  INC R3              ; R3 = 01h
+0018  75 80 01  (len=3)  MOV P0, #01h        ; Pin marker: Overflow #1 seen
+              ; [label wait_ovf2 @ 001Bh]
+001B  30 8D FD  (len=3)  JNB TF0, wait_ovf2  ; Poll TF0 until Overflow #2
+001E  C2 8C     (len=2)  CLR TR0             ; Stop Timer 0
+0020  85 8A 31  (len=3)  MOV 31h, TL0        ; Capture auto-reloaded TL0 (FCh)
+0023  C2 8D     (len=2)  CLR TF0             ; Clear TF0
+0025  0B        (len=1)  INC R3              ; R3 = 02h
+0026  8B 32     (len=2)  MOV 32h, R3         ; RAM[32h] = 02h
+0028  75 80 02  (len=3)  MOV P0, #02h        ; Pin marker: Overflow #2 seen
+002B  75 90 7F  (len=3)  MOV P1, #7Fh        ; Sentinel completion
+              ; [label done_e06 @ 002Eh]
+002E  80 FE     (len=2)  SJMP done_e06
+              END

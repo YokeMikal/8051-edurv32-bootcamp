@@ -1,0 +1,30 @@
+[*]
+[*] GTKWave Analyzer v3.3.126 (w)1999-2026 BSI
+[*] Mon Nov 23 02:26:27 2026
+[*]
+[dumpfile] "/home/yokemikal/eda/designs/8051_bootcamp/traces/e05_gpio.vcd"
+[dumpfile_mtime] "Mon Nov 23 02:21:09 2026"
+[dumpfile_size] 61134
+[savefile] "/home/yokemikal/eda/designs/8051_bootcamp/traces/day2_e05_gpio.gtkw"
+[timestart] 0
+[size] 1920 973
+[pos] -27 -24
+*-16.572010 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_8051_day2.
+[sst_width] 297
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 287
+@28
+tb_8051_day2.wb_clk_i
+@420
+tb_8051_day2.dbg_cur_pc[15:0]
+tb_8051_day2.dbg_op1[7:0]
+tb_8051_day2.dbg_rmw
+tb_8051_day2.p0_o[7:0]
+tb_8051_day2.p0_i[7:0]
+tb_8051_day2.dbg_acc[7:0]
+tb_8051_day2.dbg_ram30[7:0]
+tb_8051_day2.dbg_ram31[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

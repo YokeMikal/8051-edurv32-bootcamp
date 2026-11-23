@@ -1,0 +1,27 @@
+# IIC-OSIC-TOOLS Lockfile
+timestamp_utc: 2026-11-22T04:51:05Z
+docker_image: hpretl/iic-osic-tools:latest
+
+[iverilog]
+Icarus Verilog version 14.0 (devel) (s20260301-579-g15d870a5-dirty)
+
+[vvp]
+Icarus Verilog runtime version 14.0 (devel) (s20260301-579-g15d870a5-dirty)
+
+[verilator]
+Verilator 5.052 2026-09-05 rev v5.052
+
+[yosys]
+Yosys 0.70 (git sha1 28ba3cb92, Release, GNU /usr/bin/c++ 13.3.0)
+
+[verible-verilog-lint]
+Version	v0.0-4296-g0f262651
+
+[gtkwave]
+Could not initialize GTK!  Is DISPLAY env var/xhost set?
+
+[surfer]
+surfer 0.7.0 (git: v0.7.0)
+
+[python3]
+Python 3.12.3

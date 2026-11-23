@@ -1,0 +1,11 @@
+--- a/oc8051_alu.v
++++ b/oc8051_alu.v
+@@ -159,7 +159,7 @@
+ /* Add */
+ assign add1 = {1'b0,src1[3:0]};
+ assign add2 = {1'b0,src2[3:0]};
+-assign add3 = {3'b000,srcCy};
++assign add3 = {3'b000,1'b1}; // MUT-01 injected carry-in stuck-at-1
+ assign add4 = add1+add2+add3;
+ 
+ assign add5 = {1'b0,src1[6:4]};

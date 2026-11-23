@@ -1,0 +1,62 @@
+signal_group,logical_name,hierarchical_rtl_path,width,active_polarity_or_encoding,wbs_coverage,notes
+clock_reset,wb_clk_i,tb_8051_day1.dut.wb_clk_i,1,posedge clock (50 MHz / 20ns sim),1.1-1.8,Main synchronous system clock
+clock_reset,wb_rst_i,tb_8051_day1.dut.wb_rst_i,1,active-high async reset,1.1-1.8,Resets PC=0000h ACC=00h B=00h PSW=00h SP=07h P0..P3=FFh
+clock_reset,ea_in,tb_8051_day1.dut.ea_in,1,0=external ROM; 1=internal ROM,1.1-1.2,Tied to 1'b0 in Day-1 TB for external pipelined wbi_* fetch
+fetch_pc,pc,tb_8051_day1.dut.pc,16,hex byte address,1.2-1.8,Registered PC in oc8051_memory_interface1 (updated on rd & !int_ack_t or pc_wr_r2)
+fetch_pc,pc_buf,tb_8051_day1.dut.oc8051_memory_interface1.pc_buf,16,hex byte address,1.2,Prefetch buffer base pointer (advances +4 per 32-bit ROM fetch)
+fetch_pc,op_pos,tb_8051_day1.dut.oc8051_memory_interface1.op_pos,3,0..7 byte offset inside idat_old/idat_cur,1.2,Sliding window selector for {op1 op2 op3}
+fetch_pc,cur_pc,tb_8051_day1.dbg_cur_pc,16,pc_buf - 16'h8 + op_pos,1.2-1.8,Address of the currently presented opcode op1_n
+fetch_pc,wbi_adr_o,tb_8051_day1.dut.wbi_adr_o,16,external ROM fetch address,1.2,Driven by iadr_o (pc_out during normal fetch; ALU during MOVC)
+fetch_pc,wbi_dat_i,tb_8051_day1.dut.wbi_dat_i,32,{byte[a+3] byte[a+2] byte[a+1] byte[a]},1.2,4-byte little-endian packed ROM instruction fetch word
+fetch_pc,wbi_stb_o,tb_8051_day1.dut.wbi_stb_o,1,active-high strobe,1.2,Pipelined mode tied 1'b1 in oc8051_top
+fetch_pc,wbi_ack_i,tb_8051_day1.dut.wbi_ack_i,1,active-high ack,1.2,External ROM data valid handshake
+fetch_pc,op1_n,tb_8051_day1.dut.op1_n,8,instruction opcode byte,1.2-1.8,Opcode fed from memory_interface.op1_out to decoder.op_in
+fetch_pc,op2_n,tb_8051_day1.dut.op2_n,8,operand 1 byte,1.2-1.8,Second instruction byte (immediate / direct addr / rel / addr15:8)
+fetch_pc,op3_n,tb_8051_day1.dut.op3_n,8,operand 2 byte,1.2-1.8,Third instruction byte (imm / direct dst / rel / addr7:0)
+fetch_pc,op_length,tb_8051_day1.dut.oc8051_memory_interface1.op_length,2,1..3 bytes,1.2,Combinational length decoded from op1_out
+decode_fsm,state,tb_8051_day1.dut.oc8051_decoder1.state,2,2'b00=idle/fetch; 01/10/11=multi-cycle,1.5-1.8,Decoder execution FSM state
+decode_fsm,op_cur,tb_8051_day1.dut.oc8051_decoder1.op_cur,8,active decoded opcode,1.5,op_in when state==00 else latched op (00h on mem_wait)
+decode_fsm,rd,tb_8051_day1.dut.rd,1,!state[0] && !state[1] && !wait_data,1.2-1.8,Instruction fetch advance / boundary strobe
+decode_fsm,mem_wait,tb_8051_day1.dut.mem_wait,1,dmem_wait || imem_wait || pc_wr_r2,1.2-1.6,Stalls decode during external memory or branch flush
+decode_fsm,wait_data,tb_8051_day1.dut.wait_data,1,SFR read-after-write hazard stall,1.4-1.6,1-cycle stall from oc8051_sfr1 when reading same SFR being written
+decode_fsm,pc_wr,tb_8051_day1.dut.pc_wr,1,active-high branch/jump PC write,1.5,Asserted by decoder on SJMP/LJMP/AJMP/LCALL/ACALL/RET/DJNZ
+decode_fsm,pc_wr_sel,tb_8051_day1.dut.pc_wr_sel,3,OC8051_PIS_* (SO1/SO2/I11/I16/AL/AH/ALU),1.5,Selects target address calculation source for pc_buf
+decode_fsm,eq,tb_8051_day1.dut.eq,1,comparator output,1.5,Used by conditional branches (DJNZ/JZ/JNZ/JC/JNC/CJNE/JB)
+alu,alu_op,tb_8051_day1.dut.alu_op,4,OC8051_ALU_* (0=NOP 1=ADD 2=SUB ... E=INC),1.3-1.8,ALU operation select from decoder
+alu,src1,tb_8051_day1.dut.src1,8,ALU operand 1,1.3,Selected by oc8051_alu_src_sel1 (ACC/RAM/OP1/OP2/OP3/PCH/PCL)
+alu,src2,tb_8051_day1.dut.src2,8,ALU operand 2,1.3,Selected by oc8051_alu_src_sel1 (RAM/ACC/ZERO/OP2)
+alu,src3,tb_8051_day1.dut.src3,8,ALU operand 3 (high byte),1.3,PCH or DPH for 16-bit INC/ADD
+alu,alu_cy,tb_8051_day1.dut.alu_cy,1,carry into ALU,1.3-1.8,Selected by oc8051_cy_select1 (0/PSW.CY/bit/1)
+alu,srcAc,tb_8051_day1.dut.srcAc,1,PSW[6] aux carry input,1.3,From oc8051_sfr1.srcAc
+alu,des_acc,tb_8051_day1.dut.des_acc,8,ALU result to ACC,1.3-1.8,Primary 8-bit ALU output written to ACC on WRS_ACC1
+alu,des1,tb_8051_day1.dut.des1,8,ALU result 1 / RAM write data,1.3-1.4,Drives wr_dat to RAM/SFR
+alu,des2,tb_8051_day1.dut.des2,8,ALU result 2 (high byte/quotient/hi nibble),1.3,Drives ACC on WRS_ACC2 or DPH on WRS_DPTR
+alu,desCy,tb_8051_day1.dut.desCy,1,ALU carry-out,1.3-1.8,Stored into PSW[7] when psw_set != NOT
+alu,desAc,tb_8051_day1.dut.desAc,1,ALU aux-carry-out,1.3,Stored into PSW[6] when psw_set == AC
+alu,desOv,tb_8051_day1.dut.desOv,1,ALU signed overflow-out,1.3,Stored into PSW[2] when psw_set == OV or AC
+registers_sfr,acc,tb_8051_day1.dut.acc,8,8-bit Accumulator (SFR E0h),1.1-1.8,Output of oc8051_sfr1.oc8051_acc1
+registers_sfr,b_reg,tb_8051_day1.dut.oc8051_sfr1.b_reg,8,8-bit B register (SFR F0h),1.1-1.3,Output of oc8051_sfr1.oc8051_b_register
+registers_sfr,psw,tb_8051_day1.dut.oc8051_sfr1.psw,8,{CY AC F0 RS1 RS0 OV - P} (SFR D0h),1.1-1.8,Bit 0 is live parity of ACC
+registers_sfr,sp,tb_8051_day1.dut.sp,8,Stack Pointer (SFR 81h; resets to 07h),1.1-1.8,Output sp_out of oc8051_sfr1.oc8051_sp1
+registers_sfr,dptr,tb_8051_day1.dbg_dptr,16,{dut.dptr_hi dut.dptr_lo} (SFR 83h:82h),1.1-1.4,16-bit Data Pointer
+registers_sfr,wr_sfr,tb_8051_day1.dut.wr_sfr,2,00=None 01=ACC1 10=ACC2 11=DPTR,1.3,Special SFR write strobe from decoder
+registers_sfr,psw_set,tb_8051_day1.dut.psw_set,2,00=NOT 01=CY 10=OV 11=AC,1.3,PSW flag update strobe from decoder
+registers_sfr,p0_o,tb_8051_day1.dut.p0_o,8,Port 0 output latch (SFR 80h),1.1-1.6,Resets to FFh
+registers_sfr,p1_o,tb_8051_day1.dut.p1_o,8,Port 1 output latch (SFR 90h),1.1-1.8,Used for completion sentinel 7Fh in Day-1 TB
+registers_sfr,p2_o,tb_8051_day1.dut.p2_o,8,Port 2 output latch (SFR A0h),1.1,Resets to FFh
+registers_sfr,p3_o,tb_8051_day1.dut.p3_o,8,Port 3 output latch (SFR B0h),1.1,Resets to FFh
+ram_stack,ram_wr,tb_8051_day1.dut.oc8051_ram_top1.wr,1,wr_o && (!wr_addr[7] || wr_ind),1.4-1.8,Internal RAM write enable (excludes direct SFR >=80h; allows indirect @Ri >=80h)
+ram_stack,wr_addr,tb_8051_day1.dut.wr_addr,8,internal RAM/SFR write address,1.4,Muxed by wr_sel (RN/I/D/SP/D3/B)
+ram_stack,wr_dat,tb_8051_day1.dut.wr_dat,8,internal RAM/SFR write data (des1),1.4,Data written to RAM or SFR
+ram_stack,wr_ind,tb_8051_day1.dut.wr_ind,1,indirect/SP write flag,1.4,Allows accessing upper 128B IDATA (80h..FFh) instead of SFR
+ram_stack,rd_addr,tb_8051_day1.dut.rd_addr,8,internal RAM/SFR read address,1.4,Muxed by rd_sel
+ram_stack,ram_30h,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[48],8,Internal DATA RAM[0x30],1.4-1.8,Primary verification target (Test A expects 08h)
+ram_stack,ram_40h,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[64],8,Internal DATA RAM[0x40],1.4-1.6,Indirect addressing @R0 target in Test B
+ram_stack,ram_r0,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[0],8,Bank 0 R0 (RAM[0x00]),1.4-1.6,Indirect pointer register
+ram_stack,ram_r2,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[2],8,Bank 0 R2 (RAM[0x02]),1.4-1.6,DJNZ loop counter in Test B
+ram_stack,stk_08h,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[8],8,Stack slot SP=08h (RAM[0x08]),1.4-1.6,First pushed byte on LCALL (PCL)
+ram_stack,stk_09h,tb_8051_day1.dut.oc8051_ram_top1.oc8051_idata.buff[9],8,Stack slot SP=09h (RAM[0x09]),1.4-1.6,Second pushed byte on LCALL (PCH)
+ram_stack,indi_r0,tb_8051_day1.dut.oc8051_indi_addr1.buff[0],8,Shadowed Bank 0 R0 for fast @R0,1.4,Updated synchronously with writes to 00h
+peripherals_day2,tmod,tb_8051_day1.dut.oc8051_sfr1.oc8051_tc1.tmod,8,Timer 0/1 mode (SFR 89h),Day2_ready,Native module verified present
+peripherals_day2,tl0_th0,tb_8051_day1.dut.oc8051_sfr1.oc8051_tc1.tl0,8,Timer 0 counter low/high,Day2_ready,Native module verified present
+peripherals_day2,ie_tcon_intr,tb_8051_day1.dut.oc8051_sfr1.oc8051_int1.intr,1,Interrupt request to memory_interface,Day2_ready,Native module verified present (injects LCALL to int_vec)

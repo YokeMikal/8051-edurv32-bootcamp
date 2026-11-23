@@ -1,0 +1,59 @@
+[*]
+[*] GTKWave Analyzer v4.0.0-prealpha (f6d60e0) (w)1999-2022 BSI
+[*] Sun Nov 22 13:17:13 2026
+[*]
+[dumpfile] "/foss/designs/8051_bootcamp/traces/test_a.vcd"
+[dumpfile_mtime] "Sun Nov 22 09:52:35 2026"
+[dumpfile_size] 57908
+[savefile] "/foss/designs/8051_bootcamp/traces/test_a.gtkw"
+[timestart] 0
+[size] 1374 613
+[pos] 25 585
+*-16.470154 -1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[markername] AA
+[markername] BB
+[markername] CC
+[markername] DD
+[markername] EE
+[markername] FF
+[markername] GG
+[markername] HH
+[markername] II
+[markername] JJ
+[markername] KK
+[markername] LL
+[markername] MM
+[markername] NN
+[markername] OO
+[markername] PP
+[markername] QQ
+[markername] RR
+[markername] SS
+[markername] TT
+[markername] UU
+[markername] VV
+[markername] WW
+[markername] XX
+[markername] YY
+[markername] ZZ
+[treeopen] tb_8051_day1.
+[sst_width] 276
+[signals_width] 158
+[sst_expanded] 1
+[sst_vpaned_height] 155
+@28
+tb_8051_day1.wb_clk_i
+tb_8051_day1.wb_rst_i
+tb_8051_day1.dbg_booted
+@22
+tb_8051_day1.dbg_cur_pc[15:0]
+tb_8051_day1.dbg_op1[7:0]
+tb_8051_day1.dbg_acc[7:0]
+tb_8051_day1.dbg_psw[7:0]
+tb_8051_day1.dbg_ram30[7:0]
+tb_8051_day1.dbg_ram31[7:0]
+tb_8051_day1.dbg_ram34[7:0]
+@23
+tb_8051_day1.p1_o[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

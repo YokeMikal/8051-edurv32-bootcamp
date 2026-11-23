@@ -1,0 +1,10 @@
+=== Test 1: iverilog with -I rtl/verilog (raw default defines) ===
+/work/rtl_reference/rtl/verilog/oc8051_ram_256x8_two_bist.v:132: error: Unknown module type: generic_dpram
+2 error(s) during elaboration.
+*** These modules were missing:
+        generic_dpram referenced 1 times.
+***
+EXIT_T1=2
+
+=== Test 2: iverilog with -I sim/rtl_sim/run -I rtl/verilog + oc8051_tb ===
+EXIT_T2=0

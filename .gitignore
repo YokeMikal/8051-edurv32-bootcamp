@@ -1,0 +1,17 @@
+# Python & OS temporary files
+__pycache__/
+*.py[cod]
+*.pyo
+.DS_Store
+Thumbs.db
+
+# Office lock files
+~$*.docx
+~$*.xlsx
+
+# Temporary simulation binaries / logs
+*.vvp
+*.lxt
+*.lxt2
+sim_*.tmp
+.mplconfig/

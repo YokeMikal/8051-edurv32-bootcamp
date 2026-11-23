@@ -1,0 +1,27 @@
+# WBS 2.5 — Gap Matrix: 8051 (`oc8051`) vs EduRV-32 (`RV32I` MCU)
+
+Dokumen ini memenuhi **WBS 2.5** (perbandingan sisi RTL decode/state & sisi Firmware toolchain/ABI) sebagai jembatan langsung dari teardown 8051 menuju rekonstruksi independen **EduRV-32 (RISC-V 32-bit)** pada `/home/yokemikal/eda/designs/edurv32_repo`.
+
+---
+
+## 1. Matriks Perbedaan Arsitektural & Toolchain (`8051` ↔ `EduRV-32`)
+
+| Dimensi Teknis | OpenCores `oc8051` (8-bit CISC) | Target `EduRV-32` / `YEKVO32` (`RV32I` 32-bit RISC) | Implikasi Desain RTL & Firmware ke Depan |
+|---|---|---|---|
+| **ISA & Lebar Data** | 8-bit CISC (111 instruksi, panjang variabel **1 / 2 / 3 byte**) | 32-bit RISC (`RV32I` dasar: **fixed 32-bit / 4 byte** teralign 4-byte) | Decoder EduRV-32 jauh lebih sederhana (fixed opcode `[6:0]`, `funct3`, `funct7`); tidak butuh sliding prefetch byte buffer `op_pos`. |
+| **Fetch & Pipeline** | Pipelined 8-byte prefetch (`idat_old`/`idat_cur`), 1–4 cycle per instruksi (`state[1:0]`), flash penalty saat branch (`pc_wr_r2`) | Tahap bertingkat sesuai buku EduRV-32: Single-cycle (Bab 11) → Multicycle FSM (Bab 13) → 5-Stage Pipeline + Hazard Forwarding (Bab 14–17) | Pada RV32, PC selalu naik `+4` per instruksi normal; tidak perlu lookup tabel `op_length`. |
+| **Register File** | `ACC` (accumulator sentris), `B`, `DPTR` (16-bit), + 4 Bank `R0..R7` dipetakan di RAM `00h–1Fh` | **32 × 32-bit GPR (`x0–x31`)**, `x0` hardwired ke `0`, arsitektur Load/Store murni tanpa accumulator tunggal | ALU RV32 membaca `rs1`, `rs2` sekaligus dan menulis `rd` dalam 1 cycle register-file terpisah dari SRAM. |
+| **Ruang Memori & Decoder** | **Harvard Terpisah 5 Ruang:** `CODE`, `DATA (00h–7Fh)`, `IDATA (80h–FFh)`, `SFR (80h–FFh direct)`, `XDATA` (dipisah sinyal `wr_ind` & instruksi `MOVC/MOVX`) | **Unified 32-bit Byte-Addressed Flat Space (`4 GB` konseptual)** + **MMIO (Memory-Mapped I/O)**: Boot ROM, SRAM, dan peripheral memakai alamat 32-bit berbeda + instruksi tunggal `LW/SW/LH/LB` | Firmware C cukup memakai pointer C biasa (`*(volatile uint32_t*)`) untuk akses RAM maupun peripheral; RTL cukup pakai address decoder top-level pada bit alamat atas (`addr[31:28]` / `addr[15:12]`). |
+| **Peripheral Register & Bit Access** | Bit-addressable native (`SETB P0.0`, `CLR TF0`, `JNB RAM20.0`) + aturan khusus `rmw ? p_out : p_in` | Word-aligned MMIO 32-bit (`GPIO_OUT`, `GPIO_SET`, `GPIO_CLR` atomic registers) karena RV32I tidak memiliki instruksi manipulasi bit SFR langsung | Hardware menyediakan register **`SET`/`CLR` terpisah (write-1-to-set/clear)** atau software memakai *read-modify-write* atomik agar aman dari race condition saat ISR. |
+| **Stack & Calling Convention (ABI)** | Stack tumbuh **NAIK** di Internal RAM (`SP` reset `07h`, pre-inc push, post-dec pop); parameter lewat `R0..R7`/`ACC` atau memori statis (overlay SDCC) | Stack tumbuh **TURUN** di SRAM eksternal (`sp = x2`, inisialisasi di akhir SRAM mis. `0x2000_8000`, 16-byte aligned di RV32I ABI); return address di register **`ra` (`x1`)**, argumen `a0–a7`, caller/callee-saved `t0–t6` / `s0–s11` | Startup `crt0.S` wajib menyiapkan `sp` & `gp`, menyalin `.data` dari ROM ke SRAM, serta menolkan `.bss` sebelum memanggil `main()`. |
+| **Mekanisme Interrupt & Return** | Fixed 8-byte vector (`000Bh`, dll.), hardware menyuntik `LCALL`, `RETI` memulihkan PC + reset `int_proc`; ISR manual `PUSH ACC/PSW` | **RISC-V Machine-Mode CSRs:** trap loncat ke alamat di **`mtvec`**, hardware menyimpan PC ke **`mepc`**, penyebab ke **`mcause`**, mematikan `MIE` di **`mstatus`**, lalu kembali dengan instruksi **`mret`** | Pada RV32, hardware **tidak** men-push `ra` atau `t0-t6` ke stack saat IRQ! Handler trap assembly (`trap_entry`) wajib mengalokasikan frame stack (`addi sp, sp, -N`), save `caller-saved registers`, panggil C handler, restore, dan eksekusi `mret`. |
+| **Timer Prescaler & Lebar** | Counter 8-bit (`TL0/TH0`) dengan prescaler tetap ÷12 (`oc8051_sfr.v`) | Timer 32-bit dengan prescaler dapat diprogram (`PRESCALE` + register `LOAD`/`COMPARE`), resolusi **1 clock** memungkinkan pengukuran latensi presisi hingga satuan siklus | Timer 32-bit jauh lebih mudah untuk benchmark presisi mikrosekon/nanodetik dibanding timer 8-bit 8051. |
+| **Toolchain & Verification Oracle** | `asm8051.py` / `SDCC` + `iverilog` + Python `Golden8051` step checker | `riscv32-unknown-elf-gcc` (`-march=rv32i -mabi=ilp32`) + linker script `.ld` + `iverilog`/`Verilator` + golden ISS (`Spike` / `QEMU` / Python RV32I commit tracer) | Bisa menjalankan firmware C standar, RTOS ringan, maupun uji kesetaraan workload C terhadap papan **ESP32-C3**. |
+
+---
+
+## 2. Daftar Perbedaan Kritis untuk Menjawab Soal Gate H2 (*"Daftar Perbedaan dengan EduRV-32"*)
+
+1. **Decoder vs Control FSM:** 8051 memerlukan state machine `oc8051_decoder` yang kompleks untuk >100 opcode multi-length (1–3B), sedangkan EduRV-32 Bab 11–17 hanya mendekode ~37–40 instruksi dasar RV32I berformat tetap 32-bit (`R/I/S/B/U/J`).
+2. **Eliminasi Hazard SFR & Wrapper Memori Unik:** Masalah `wr_ind` (memisahkan `80h–FFh`), `wait_data`, dan 8-byte prefetch stall di `oc8051` hilang sepenuhnya pada EduRV-32, digantikan oleh hazard pipeline klasik (`RAW load-use stall`, `EX/MEM forwarding`, dan `branch flush`).
+3. **Standardisasi ABI & Trap Context:** Pada 8051 cukup `PUSH ACC/PSW` (2 byte); pada EduRV-32 `RV32I` ISR wajib menyimpan minimal 16 register caller-saved (`ra, t0-t6, a0-a7` = **64 byte**) ke SRAM stack sebelum memanggil handler C.

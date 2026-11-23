@@ -1,0 +1,45 @@
+project:
+  name: "8051_bootcamp"
+  horizon: "Day 1 - Understand the 8051 Machine (WBS 1.1 - 1.8 & Gate H1)"
+  owner: "Yoke Mikal (RTL Engineer)"
+  bootcamp_doc: "FINAL v1.0 (19 November 2026, YEKVO Engineering Academy)"
+
+reference_core:
+  name: "OpenCores oc8051"
+  repository: "https://github.com/freecores/8051.git"
+  commit_hash: "f1a1ce31640c3e5c67935b649235e644462365a5"
+  commit_date: "2003-07-15 09:38:49 +0000"
+  commit_message: "initial inport."
+  license: "LGPL-2.1-or-later"
+  local_path: "rtl_reference/"
+  policy: "READ-ONLY reference core. Never edit files inside rtl_reference/."
+
+configuration:
+  defines_file: "tb/oc8051_defines.v"
+  peripherals_enabled:
+    - "OC8051_PORTS (P0, P1, P2, P3 - native)"
+    - "OC8051_TC01 (Timer/Counter 0 & 1 - native)"
+    - "OC8051_TC2 (Timer/Counter 2 - native)"
+    - "OC8051_UART (Serial UART - native)"
+    - "oc8051_int (Interrupt Controller - native)"
+  memory_mode:
+    program_rom: "External pipelined ROM via wbi_* (ea_in = 1'b0, OC8051_ROM disabled)"
+    internal_ram: "Behavioral 256x8 dual-port array in oc8051_ram_256x8_two_bist (OC8051_RAM_GENERIC disabled due to missing external generic_dpram dependency)"
+    external_xram: "Stubbed 8'h00 ACK responder in tb_8051_day1 (not exercised in Day 1)"
+  fallback_peripheral_models: "None needed — all ports, timers, UART, and interrupt blocks exist natively in oc8051_top"
+
+toolchain:
+  environment: "IIC-OSIC-TOOLS via Docker (hpretl/iic-osic-tools:latest) on WSL2 Ubuntu"
+  lockfile: "tools.lock"
+  simulator: "Icarus Verilog 14.0 (iverilog / vvp)"
+  linter: "Verilator 5.052 / Verible v0.0-4296-g0f262651"
+  waveform_viewer: "GTKWave / Surfer 0.7.0"
+  assembler: "scripts/asm8051.py (Python 3.12.3 / 3.8.4 deterministic 2-pass 8051 assembler)"
+
+workspace:
+  wsl_ubuntu_path: "/home/yokemikal/eda/designs/8051_bootcamp"
+  iic_osic_container_path: "/foss/designs/8051_bootcamp"
+  windows_unc_path: "\\wsl.localhost\\Ubuntu\\home\\yokemikal\\eda\\designs\\8051_bootcamp"
+  rtl_libs_wsl: "/home/yokemikal/eda/designs/rtl_libs"
+  rtl_libs_container: "/foss/designs/rtl_libs"
+  windows_backup: "C:\\Users\\ASUS\\.gemini\\antigravity\\scratch\\rtl-workspace"

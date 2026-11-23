@@ -1,0 +1,84 @@
+/work/rtl_mutation/oc8051_top.v:115: warning: timescale for oc8051_top inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_alu_src_sel.v:66: warning: timescale for oc8051_alu_src_sel inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_alu.v:89: warning: timescale for oc8051_alu inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_decoder.v:90: warning: timescale for oc8051_decoder inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_divide.v:57: warning: timescale for oc8051_divide inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_multiply.v:65: warning: timescale for oc8051_multiply inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_memory_interface.v:92: warning: timescale for oc8051_memory_interface inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_ram_top.v:77: warning: timescale for oc8051_ram_top inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_acc.v:77: warning: timescale for oc8051_acc inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_comp.v:66: warning: timescale for oc8051_comp inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_sp.v:66: warning: timescale for oc8051_sp inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_dptr.v:62: warning: timescale for oc8051_dptr inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_cy_select.v:62: warning: timescale for oc8051_cy_select inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_psw.v:72: warning: timescale for oc8051_psw inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_indi_addr.v:64: warning: timescale for oc8051_indi_addr inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_ports.v:69: warning: timescale for oc8051_ports inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_b_register.v:65: warning: timescale for oc8051_b_register inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_uart.v:73: warning: timescale for oc8051_uart inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_int.v:75: warning: timescale for oc8051_int inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_tc.v:72: warning: timescale for oc8051_tc inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_tc2.v:64: warning: timescale for oc8051_tc2 inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_icache.v:79: warning: timescale for oc8051_icache inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_wb_iinterface.v:70: warning: timescale for oc8051_wb_iinterface inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_sfr.v:98: warning: timescale for oc8051_sfr inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_rom.v:65: warning: timescale for oc8051_rom inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_ram_256x8_two_bist.v:59: warning: timescale for oc8051_ram_256x8_two_bist inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_ram_64x32_dual_bist.v:59: warning: timescale for oc8051_ram_64x32_dual_bist inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+/work/rtl_mutation/oc8051_cache_ram.v:60: warning: timescale for oc8051_cache_ram inherited from another file.
+/work/rtl_mutation/oc8051_timescale.v:3: ...: The inherited timescale is here.
+	 * 
+	 * Internal rom disabled!!!
+	 * 
+WARNING: /work/tb/tb_8051_day1.v:172: $readmemh(/work/firmware/asm/test_a_arith.in): Not enough words in the file for the requested range [0:65535].
+VCD info: dumpfile /work/traces/test_a_repaired.vcd opened for output.
+	 * 
+	 * External rom interface: Pipelined interface
+	 * 
+[TB_MONITOR] Test=test_a | Reset released at time=10000 | PC=0000 SP=07 ACC=00 PSW=00
+ 
+	 Program running from external rom !
+ 
+   progran execution from internal rom
+[TB_DATA] cyc=14 t=36000 cur_pc=0004 op=f5 | ACC=05 PSW=01 SP=07 R0=00 R2=00 RAM[30..34]=00,00,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=15 t=38000 cur_pc=0006 op=04 | ACC=08 PSW=01 SP=07 R0=00 R2=00 RAM[30..34]=00,00,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=16 t=40000 cur_pc=0007 op=f5 | ACC=08 PSW=00 SP=07 R0=00 R2=00 RAM[30..34]=08,00,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=17 t=42000 cur_pc=0009 op=94 | ACC=09 PSW=00 SP=07 R0=00 R2=00 RAM[30..34]=08,00,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=18 t=44000 cur_pc=000b op=f5 | ACC=09 PSW=01 SP=07 R0=00 R2=00 RAM[30..34]=08,09,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=19 t=46000 cur_pc=000d op=24 | ACC=07 PSW=01 SP=07 R0=00 R2=00 RAM[30..34]=08,09,00,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=20 t=48000 cur_pc=000f op=f5 | ACC=07 PSW=00 SP=07 R0=00 R2=00 RAM[30..34]=08,09,07,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=21 t=50000 cur_pc=0011 op=85 | ACC=03 PSW=c0 SP=07 R0=00 R2=00 RAM[30..34]=08,09,07,00,00 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=23 t=54000 cur_pc=0017 op=80 | ACC=03 PSW=c0 SP=07 R0=00 R2=00 RAM[30..34]=08,09,07,03,c0 RAM[40]=00 P0=ff P1=ff
+[TB_DATA] cyc=24 t=56000 cur_pc=0019 op=00 | ACC=03 PSW=c0 SP=07 R0=00 R2=00 RAM[30..34]=08,09,07,03,c0 RAM[40]=00 P0=ff P1=7f
+[TB_MONITOR] cyc=24 t=56000 Sentinel P1=7Fh observed; settling 6 cycles...
+[TB_MONITOR] Summary Test=test_a cyc=29 max_sp=07 stk08=00 stk09=00 RAM30=08 RAM31=09 RAM34=c0 RAM40=00 ACC=03 PSW=c0 SP=07
+[TB_INFO] Simulation Finished!
+[FINISH] PASS
+/work/tb/tb_8051_day1.v:348: $finish called at 66000 (10ps)

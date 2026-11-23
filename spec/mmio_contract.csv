@@ -1,0 +1,20 @@
+peripheral,base_addr,offset,abs_addr,reg_name,width_bits,reset_val,access,side_effects,notes
+GPIO0,0x40000000,0x00,0x40000000,GPIO_DIR,32,0x00000000,RW,Drives pad output-enable OE[31:0],1=Output; 0=Input (Hi-Z default safe after reset)
+GPIO0,0x40000000,0x04,0x40000004,GPIO_OUT,32,0x00000000,RW,Updates entire output latch OUT[31:0],Reads return current output latch value (like RMW in 8051)
+GPIO0,0x40000000,0x08,0x40000008,GPIO_IN,32,0x00000000,RO,Samples synchronized external pad state; writes ignored,Fixes 8051 rmw confusion by separating IN vs OUT addresses
+GPIO0,0x40000000,0x0C,0x4000000C,GPIO_SET,32,0x00000000,WO,Atomic set: OUT <= OUT | WDATA; reads return 0,Interrupt-safe atomic bit set without read-modify-write
+GPIO0,0x40000000,0x10,0x40000010,GPIO_CLR,32,0x00000000,WO,Atomic clear: OUT <= OUT & ~WDATA; reads return 0,Interrupt-safe atomic bit clear without read-modify-write
+TIMER0,0x40001000,0x00,0x40001000,TIM_CTRL,32,0x00000000,RW,[0]=EN [1]=AUTO_RELOAD [2]=IRQ_EN,Clearing EN freezes counter without wiping COUNT
+TIMER0,0x40001000,0x04,0x40001004,TIM_PRESCALE,32,0x00000000,RW,Clock divider = PRESCALE + 1 (0 = divide by 1),Replaces fixed /12 prescaler from oc8051
+TIMER0,0x40001000,0x08,0x40001008,TIM_LOAD,32,0xFFFFFFFF,RW,Write reloads active down-counter or sets auto-reload value,32-bit auto-reload target matching Mode 2 concept
+TIMER0,0x40001000,0x0C,0x4000100C,TIM_COUNT,32,0x00000000,RO,Returns live 32-bit timer value; writes ignored,1-cycle precision readable by benchmark firmware
+TIMER0,0x40001000,0x10,0x40001010,TIM_STATUS,32,0x00000000,RW1C,[0]=OVF_FLAG; write-1 clears OVF_FLAG & deasserts IRQ,Prevents lost-flag race compared to R/W clear
+UART0,0x40002000,0x00,0x40002000,UART_TXDATA,32,0x00000000,WO,Pushes byte [7:0] into TX FIFO if not full; reads return 0,Starts serial TX frame automatically when idle
+UART0,0x40002000,0x04,0x40002004,UART_RXDATA,32,0x00000000,RO,Pops 1 byte [7:0] from RX FIFO; [8]=VALID; side effect pops on read,Avoids destructive reads unless RX_VALID==1
+UART0,0x40002000,0x08,0x40002008,UART_STATUS,32,0x00000005,RO,[0]=TX_EMPTY [1]=TX_FULL [2]=RX_EMPTY [3]=RX_FULL [4]=OVERRUN,Reset 0x5 means TX_EMPTY=1 & RX_EMPTY=1
+UART0,0x40002000,0x0C,0x4000200C,UART_CTRL,32,0x00000000,RW,[0]=TX_EN [1]=RX_EN [2]=TX_IRQ_EN [3]=RX_IRQ_EN,Enables peripheral pins and interrupt generation
+UART0,0x40002000,0x10,0x40002010,UART_BAUDDIV,32,0x000001B2,RW,Baud clock divisor = f_clk / baud (default 50MHz/115200=434),Programmable baud rate generator
+IRQ_CTRL,0x40003000,0x00,0x40003000,IRQ_ENABLE,32,0x00000000,RW,Bit mask [0]=TIMER0 [1]=UART0 [2]=GPIO_EXT,Per-source enable gated with CPU mstatus.MIE
+IRQ_CTRL,0x40003000,0x04,0x40003004,IRQ_PENDING,32,0x00000000,RO,Reflects active unserviced interrupt lines masked or raw,Hardware clears upon source status acknowledge
+IRQ_CTRL,0x40003000,0x08,0x40003008,IRQ_CLAIM,32,0x00000000,RW,Read returns highest-priority active ID; write completes EOI,0=none; 1=TIMER0; 2=UART0; 3=GPIO_EXT
+IRQ_CTRL,0x40003000,0x0C,0x4000300C,IRQ_THRESHOLD,32,0x00000000,RW,Minimum priority threshold for firing CPU external IRQ,Supports future multi-level priority extension

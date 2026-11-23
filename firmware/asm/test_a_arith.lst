@@ -1,0 +1,16 @@
+0000          ORG 0000h
+              ; [label start @ 0000h]
+0000  74 05     (len=2)  MOV A, #05h         ; [0000] 74 05 -> A=05h, PSW=00h
+0002  24 03     (len=2)  ADD A, #03h         ; [0002] 24 03 -> A=08h, PSW=01h (P=1)
+0004  F5 30     (len=2)  MOV 30h, A          ; [0004] F5 30 -> RAM[30h]=08h (Gate H1 Test A core)
+0006  04        (len=1)  INC A               ; [0006] 04    -> A=09h, PSW=00h (P=0)
+0007  F5 31     (len=2)  MOV 31h, A          ; [0007] F5 31 -> RAM[31h]=09h
+0009  94 02     (len=2)  SUBB A, #02h        ; [0009] 94 02 -> A=07h, PSW=01h (CY=0, P=1)
+000B  F5 32     (len=2)  MOV 32h, A          ; [000B] F5 32 -> RAM[32h]=07h
+000D  24 FC     (len=2)  ADD A, #0FCh        ; [000D] 24 FC -> 07h + FCh = 103h -> A=03h, CY=1 AC=1 OV=0 P=0 -> PSW=C0h
+000F  F5 33     (len=2)  MOV 33h, A          ; [000F] F5 33 -> RAM[33h]=03h
+0011  85 D0 34  (len=3)  MOV 34h, PSW        ; [0011] 85 D0 34 -> RAM[34h]=C0h (capture flags)
+0014  75 90 7F  (len=3)  MOV P1, #7Fh        ; [0014] 75 90 7F -> completion sentinel
+              ; [label done @ 0017h]
+0017  80 FE     (len=2)  SJMP done           ; [0017] 80 FE
+              END
