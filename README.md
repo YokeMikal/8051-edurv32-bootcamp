@@ -33,13 +33,15 @@ Repositori hasil kerja **RTL Engineer (WBS Hari 1 & Hari 2)** berbasis core **Op
 | `tb/` | `WBS 1.6`, `2.1–2.4` | `oc8051_defines.v`, `tb_8051_day1.v`, `tb_8051_day2.v` (self-checking + VCD + CSV dump) |
 | `scripts/` | Otomasi | `asm8051.py`, `trace_checker.py`, `run_in_iic_osic.sh`, `run_baseline_all.sh`, `run_mutated_test_a.sh`, `run_repaired_regression.sh`, `run_day2_all.sh` |
 | `traces/` | Waveform VCD | File `.vcd` & preset `.gtkw` untuk GTKWave / Surfer |
-| `reports/` | Log, CSV & Word | Semua `*_sim.log`, `*_trace.csv`, `mutation.md`, `mut01_defect.diff`, serta laporan `.docx` Hari 1 & Hari 2 |
+| `reports/` | Log, CSV, Word & PDF | Semua `*_sim.log`, `*_trace.csv`, `mutation.md`, `mut01_defect.diff`, serta laporan `.docx` & `.pdf` Hari 1 & Hari 2 |
 | `evidence/` | Gate H1 & H2 | Catatan bukti per sub-bab (`wbs_1_*`, `wbs_2_*`), `gate_h1_evidence_records.md`, `gate_h2_evidence_records.md`, dan gambar `evidence/figures/` |
 | `manifest.yaml`, `tools.lock`, `signal_map.csv`, `LICENSE` | `P-01..P-05` | Kunci revisi core, daftar versi tools IIC-OSIC, peta 61 sinyal observasi, dan lisensi |
 
-### Laporan Word (.docx)
-- **Hari 1:** [`reports/Laporan_Evidence_WBS_Hari1_8051_YokeMikal.docx`](reports/Laporan_Evidence_WBS_Hari1_8051_YokeMikal.docx)
-- **Hari 2:** [`reports/Laporan_Evidence_WBS_Hari2_8051_RV32_YokeMikal.docx`](reports/Laporan_Evidence_WBS_Hari2_8051_RV32_YokeMikal.docx)
+### Laporan Resmi (.docx & .pdf)
+- **Hari 1 (Word):** [`reports/WBS_H1_RTL_Yoke_Mikal_Ramadian.docx`](reports/WBS_H1_RTL_Yoke_Mikal_Ramadian.docx)
+- **Hari 1 (PDF):** [`reports/WBS_H1_RTL_Yoke_Mikal_Ramadian.pdf`](reports/WBS_H1_RTL_Yoke_Mikal_Ramadian.pdf)
+- **Hari 2 (Word):** [`reports/WBS_H2_RTL_Yoke_Mikal_Ramadian.docx`](reports/WBS_H2_RTL_Yoke_Mikal_Ramadian.docx)
+- **Hari 2 (PDF):** [`reports/WBS_H2_RTL_Yoke_Mikal_Ramadian.pdf`](reports/WBS_H2_RTL_Yoke_Mikal_Ramadian.pdf)
 
 ---
 
